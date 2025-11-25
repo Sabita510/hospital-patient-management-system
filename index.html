@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Patient Management System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    .patient-card {
+      background: #ecf0f1;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+    .patient-card h3 {
+      margin: 0;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hospital Patient Management System</h1>
+  <div class="container">
+    <h2>Add Patient</h2>
+    <input type="text" id="name" placeholder="Enter patient name">
+    <input type="number" id="age" placeholder="Enter patient age">
+    <input type="text" id="diagnosis" placeholder="Enter diagnosis">
+    <button onclick="addPatient()">Add Patient</button>
+
+    <h2>Search Patient by ID</h2>
+    <input type="number" id="searchId" placeholder="Enter patient ID">
+    <button onclick="searchPatient()">Search</button>
+    <p id="searchResult"></p>
+
+    <h2>Patients List</h2>
+    <div id="patientList"></div>
+  </div>
+
+  <script>
+    let patients = [];
+    let patientId = 1;
+
+    function addPatient() {
+      let name = document.getElementById("name").value;
+      let age = document.getElementById("age").value;
+      let diagnosis = document.getElementById("diagnosis").value;
+
+      if (name === "" || age === "" || diagnosis === "") {
+        alert("Please fill all fields");
+        return;
+      }
+
+      let patient = {
+        id: patientId++,
+        name: name,
+        age: age,
+        diagnosis: diagnosis
+      };
+
+      patients.push(patient);
+      displayPatients();
+
+      // Clear inputs
+      document.getElementById("name").value = "";
+      document.getElementById("age").value = "";
+      document.getElementById("diagnosis").value = "";
+    }
+
+    function displayPatients() {
+      let list = document.getElementById("patientList");
+      list.innerHTML = "";
+      patients.forEach(patient => {
+        list.innerHTML += `
+          <div class="patient-card">
+            <h3>ID: ${patient.id} - ${patient.name}</h3>
+            <p>Age: ${patient.age}</p>
+            <p>Diagnosis: ${patient.diagnosis}</p>
+            <button onclick="deletePatient(${patient.id})">Delete</button>
+          </div>
+        `;
+      });
+    }
+
+    function searchPatient() {
+      let id = document.getElementById("searchId").value;
+      let result = document.getElementById("searchResult");
+      let patient = patients.find(p => p.id == id);
+
+      if (patient) {
+        result.innerHTML = `✅ Found: ${patient.name}, Age: ${patient.age}, Diagnosis: ${patient.diagnosis}`;
+      } else {
+        result.innerHTML = "❌ Patient not found.";
+      }
+    }
+
+    function deletePatient(id) {
+      patients = patients.filter(p => p.id !== id);
+      displayPatients();
+    }
+  </script>
+</body>
+</html>
